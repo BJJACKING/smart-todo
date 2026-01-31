@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能待办事项管理器</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-tasks"></i> 智能待办事项</h1>
+                <p class="subtitle">AI 智能分类 + 优先级管理</p>
+            </div>
+            <div class="date-display">
+                <div class="date" id="current-date">2026年1月31日</div>
+                <div class="time" id="current-time">15:27:00</div>
+            </div>
+        </header>
+
+        <main>
+            <div class="dashboard">
+                <div class="stats-cards">
+                    <div class="stat-card total">
+                        <div class="stat-icon"><i class="fas fa-list-alt"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="total-tasks">0</div>
+                            <div class="stat-label">总任务数</div>
+                        </div>
+                    </div>
+                    <div class="stat-card pending">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="pending-tasks">0</div>
+                            <div class="stat-label">待完成</div>
+                        </div>
+                    </div>
+                    <div class="stat-card completed">
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="completed-tasks">0</div>
+                            <div class="stat-label">已完成</div>
+                        </div>
+                    </div>
+                    <div class="stat-card priority">
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="high-priority">0</div>
+                            <div class="stat-label">高优先级</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div class="task-input-section">
+                        <h2><i class="fas fa-plus-circle"></i> 添加新任务</h2>
+                        <div class="task-form">
+                            <input type="text" id="task-input" placeholder="输入任务描述...">
+                            <div class="form-controls">
+                                <div class="priority-selector">
+                                    <label>优先级:</label>
+                                    <div class="priority-buttons">
+                                        <button class="priority-btn low active" data-priority="low">低</button>
+                                        <button class="priority-btn medium" data-priority="medium">中</button>
+                                        <button class="priority-btn high" data-priority="high">高</button>
+                                    </div>
+                                </div>
+                                <div class="category-selector">
+                                    <label>分类:</label>
+                                    <select id="category-select">
+                                        <option value="work">工作</option>
+                                        <option value="personal">个人</option>
+                                        <option value="shopping">购物</option>
+                                        <option value="health">健康</option>
+                                        <option value="learning">学习</option>
+                                        <option value="other">其他</option>
+                                    </select>
+                                </div>
+                                <div class="due-date">
+                                    <label>截止日期:</label>
+                                    <input type="date" id="due-date">
+                                </div>
+                            </div>
+                            <button id="add-task-btn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> 添加任务
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="task-management">
+                        <div class="filter-section">
+                            <h2><i class="fas fa-filter"></i> 任务筛选</h2>
+                            <div class="filters">
+                                <button class="filter-btn active" data-filter="all">全部</button>
+                                <button class="filter-btn" data-filter="pending">待完成</button>
+                                <button class="filter-btn" data-filter="completed">已完成</button>
+                                <button class="filter-btn" data-filter="high">高优先级</button>
+                                <button class="filter-btn" data-filter="today">今日到期</button>
+                            </div>
+                            <div class="sort-options">
+                                <label>排序:</label>
+                                <select id="sort-select">
+                                    <option value="priority">按优先级</option>
+                                    <option value="dueDate">按截止日期</option>
+                                    <option value="created">按创建时间</option>
+                                    <option value="alphabetical">按字母顺序</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="task-list-container">
+                            <div class="task-list-header">
+                                <h3>任务列表</h3>
+                                <div class="actions">
+                                    <button id="clear-completed" class="btn btn-secondary">
+                                        <i class="fas fa-trash"></i> 清除已完成
+                                    </button>
+                                    <button id="export-tasks" class="btn btn-secondary">
+                                        <i class="fas fa-download"></i> 导出
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="task-list" id="task-list">
+                                <!-- 任务将通过JS动态添加 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <div class="category-breakdown">
+                        <h3><i class="fas fa-chart-pie"></i> 分类统计</h3>
+                        <div class="category-chart" id="category-chart">
+                            <!-- 图表将通过JS生成 -->
+                        </div>
+                        <div class="category-stats" id="category-stats">
+                            <!-- 分类统计将通过JS生成 -->
+                        </div>
+                    </div>
+
+                    <div class="productivity-tips">
+                        <h3><i class="fas fa-lightbulb"></i> 效率提示</h3>
+                        <div class="tips-list">
+                            <div class="tip">
+                                <i class="fas fa-check"></i>
+                                <span>将大任务分解为小步骤</span>
+                            </div>
+                            <div class="tip">
+                                <i class="fas fa-check"></i>
+                                <span>优先处理高优先级任务</span>
+                            </div>
+                            <div class="tip">
+                                <i class="fas fa-check"></i>
+                                <span>每天设定3个主要目标</span>
+                            </div>
+                            <div class="tip">
+                                <i class="fas fa-check"></i>
+                                <span>定期回顾和调整任务</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <h3><i class="fas fa-bolt"></i> 快速操作</h3>
+                        <div class="action-buttons">
+                            <button class="action-btn" id="quick-work">
+                                <i class="fas fa-briefcase"></i> 添加工作任务
+                            </button>
+                            <button class="action-btn" id="quick-personal">
+                                <i class="fas fa-home"></i> 添加个人任务
+                            </button>
+                            <button class="action-btn" id="mark-all-done">
+                                <i class="fas fa-check-double"></i> 标记所有完成
+                            </button>
+                            <button class="action-btn" id="remind-today">
+                                <i class="fas fa-bell"></i> 今日提醒
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <div class="productivity-score">
+                    <div class="score-label">今日效率分</div>
+                    <div class="score-value" id="productivity-score">0</div>
+                    <div class="score-progress">
+                        <div class="progress-bar" id="score-progress"></div>
+                    </div>
+                </div>
+                <div class="footer-info">
+                    <p>智能待办事项管理器 v1.0 • 数据自动保存到本地</p>
+                    <p class="hint"><i class="fas fa-info-circle"></i> 提示：双击任务可以快速编辑，拖拽可以重新排序</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 编辑任务模态框 -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> 编辑任务</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="edit-task-input" placeholder="任务描述">
+                <div class="modal-controls">
+                    <div class="modal-priority">
+                        <label>优先级:</label>
+                        <div class="priority-buttons">
+                            <button class="priority-btn low" data-priority="low">低</button>
+                            <button class="priority-btn medium" data-priority="medium">中</button>
+                            <button class="priority-btn high" data-priority="high">高</button>
+                        </div>
+                    </div>
+                    <div class="modal-category">
+                        <label>分类:</label>
+                        <select id="edit-category-select">
+                                            <option value="work">工作</option>
+                                            <option value="personal">个人</option>
+                                            <option value="shopping">购物</option>
+                                            <option value="health">健康</option>
+                                            <option value="learning">学习</option>
+                                            <option value="other">其他</option>
+                                        </select>
+                    </div>
+                    <div class="modal-due-date">
+                        <label>截止日期:</label>
+                        <input type="date" id="edit-due-date">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-modal">取消</button>
+                <button class="btn btn-primary" id="save-edit">保存更改</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
